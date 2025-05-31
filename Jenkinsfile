@@ -6,6 +6,16 @@ pipeline {
   }
 
   stages {
+    stage('Validate Helm Chart') {
+      steps {
+        withCredentials([file(credentialsId: env.KUBECONFIG_CRED_ID, variable: 'KUBECONFIG')]) {
+          sh '''
+            export KUBECONFIG=$KUBECONFIG
+            helm template --validate test ./my-nginx
+          '''
+        }
+      }
+    }
     stage('Install Helm Chart') {
       steps {
         withCredentials([file(credentialsId: env.KUBECONFIG_CRED_ID, variable: 'KUBECONFIG')]) {
@@ -18,5 +28,3 @@ pipeline {
     }
   }
 }
-
-
