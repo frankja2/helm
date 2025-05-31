@@ -8,7 +8,7 @@ MULTILINE_STRING: |
     - tabulatory:	<- tu jest tab
     - "cudzysłowy"
     - 'apostrofy'
-NESTED_DATA:
+NESTED_DATA: |-
   inner_key1: inner_value1
   inner_key2: |
     Wartość z łamaniem
