@@ -8,3 +8,6 @@ image:
 service:
   type: ClusterIP
   port: 80
+
+superdata:
+  my-super-data: justtest
