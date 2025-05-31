@@ -1,8 +1,6 @@
-{{- if .Values.superdata }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-superdata
 data:
-{{ toYaml .Values.superdata | indent 2 }}
-{{- end }}
+{{ .Files.Get "files/superdata.yaml" | indent 2 }}
