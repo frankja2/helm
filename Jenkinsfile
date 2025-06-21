@@ -17,7 +17,7 @@ pipeline {
           sh '''
             export KUBECONFIG=$KUBECONFIG
             az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
-            az acr login --name $ACR_NAME
+            az acr repository list --name $ACR_NAME --output table
           '''
         }
       }
