@@ -15,6 +15,7 @@ steps {
     }
     stage('Install Helm Chart') {
 steps {
+  sh 'helm -h'
   sh 'sleep 120'
 }
     }
