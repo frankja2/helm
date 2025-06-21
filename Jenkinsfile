@@ -81,8 +81,7 @@ pipeline {
 stage('Push Helm Chart to ACR') {
   steps {
     withCredentials([usernamePassword(credentialsId: 'jenkins-serviceprincipal', usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET')]) {
-      dir(env.CHART_PATH) {
-script {
+     script {
     def secrets = getSecretsFromKeyVault('dev', 'test')
 
     def secretsList = secrets.collect { k, v -> [ name: k, value: v ] }
@@ -91,6 +90,8 @@ script {
 
     writeFile file: 'secrets.yaml', text: yamlContent
 }
+      dir(env.CHART_PATH) {
+
         sh '''
           CHART_TGZ=$(ls *.tgz | head -n1)
           helm registry login $ACR_NAME.azurecr.io --username $AZURE_CLIENT_ID --password $AZURE_CLIENT_SECRET
