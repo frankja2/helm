@@ -12,7 +12,7 @@ pipeline {
       steps {
         withCredentials([
           file(credentialsId: env.KUBECONFIG_CRED_ID, variable: 'KUBECONFIG'),
-          usernamePassword(credentialsId: 'azure-sp-jenkins', usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET')
+          usernamePassword(credentialsId: 'jenkins-serviceprincipal', usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET')
         ]) {
           sh '''
             export KUBECONFIG=$KUBECONFIG
