@@ -53,6 +53,21 @@ stage('Push Helm Chart to ACR') {
     }
   }
 }
+stage('Generate secret.yaml') {
+  steps {
+    sh '''
+      cat <<EOF > secret.yaml
+secrets:
+  - name: db-password
+    value: supersecret123
+  - name: api-key
+    value: myapikey-xyz
+  - name: admin-password
+    value: adminP@ssw0rd
+EOF
+    '''
+  }
+}
 stage('Template Helm Chart from ACR') {
   steps {
     withCredentials([usernamePassword(credentialsId: 'jenkins-serviceprincipal', usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET')]) {
