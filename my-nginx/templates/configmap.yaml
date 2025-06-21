@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ .Release.Name }}-superdata
-data:
-{{ .Files.Get "files/superdata.yaml" | indent 2 }}
