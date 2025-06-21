@@ -7,6 +7,7 @@ pipeline {
     ACR_NAME = 'jfsandbox'
     REPO_URL = 'https://github.com/frankja2/helm-charts.git'
     CHART_PATH = 'external'
+    CHART_VERSION = '0.1.0'    // Dopasuj do Chart.yaml jeśli zmieniasz wersję
   }
 
   stages {
@@ -27,7 +28,6 @@ pipeline {
 
     stage('Clone Helm Charts') {
       steps {
-        // Repo publiczne — credentialsId niepotrzebny
         git url: env.REPO_URL, branch: 'main'
       }
     }
@@ -36,6 +36,18 @@ pipeline {
       steps {
         dir(env.CHART_PATH) {
           sh 'helm package .'
+        }
+      }
+    }
+
+    stage('Push Helm Chart to ACR') {
+      steps {
+        dir(env.CHART_PATH) {
+          sh '''
+            CHART_TGZ=$(ls *.tgz | head -n1)
+            helm registry login $ACR_NAME.azurecr.io --username $AZURE_CLIENT_ID --password $AZURE_CLIENT_SECRET
+            helm push $CHART_TGZ oci://$ACR_NAME.azurecr.io/helm
+          '''
         }
       }
     }
