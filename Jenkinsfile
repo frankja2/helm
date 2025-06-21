@@ -58,7 +58,6 @@ pipeline {
           sh '''
             export KUBECONFIG=$KUBECONFIG
             az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET --tenant $AZURE_TENANT_ID
-            def secrets = getSecretsFromKeyVault('dev', 'test')
             az acr repository list --name $ACR_NAME --output table
           '''
         }
