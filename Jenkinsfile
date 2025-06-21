@@ -83,8 +83,13 @@ stage('Push Helm Chart to ACR') {
     withCredentials([usernamePassword(credentialsId: 'jenkins-serviceprincipal', usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET')]) {
       dir(env.CHART_PATH) {
 script {
-def secrets = getSecretsFromKeyVault('dev', 'test')
-echo "Sekrety z KeyVault:\n${secrets.collect { k, v -> "- ${k} = ${v}" }.join('\n')}"
+    def secrets = getSecretsFromKeyVault('dev', 'test')
+
+    def secretsList = secrets.collect { k, v -> [ name: k, value: v ] }
+    def yamlContent = "secrets:\n" +
+        secretsList.collect { "  - name: \"${it.name}\"\n    value: \"${it.value}\"" }.join('\n')
+
+    writeFile file: 'secrets.yaml', text: yamlContent
 }
         sh '''
           CHART_TGZ=$(ls *.tgz | head -n1)
@@ -95,21 +100,7 @@ echo "Sekrety z KeyVault:\n${secrets.collect { k, v -> "- ${k} = ${v}" }.join('\
     }
   }
 }
-stage('Generate secrets.yaml') {
-  steps {
-    sh '''
-      cat <<EOF > secrets.yaml
-secrets:
-  - name: db-password
-    value: supersecret123
-  - name: api-key
-    value: myapikey-xyz
-  - name: admin-password
-    value: adminP@ssw0rd
-EOF
-    '''
-  }
-}
+
 stage('Template Helm Chart from ACR') {
   steps {
     withCredentials([usernamePassword(credentialsId: 'jenkins-serviceprincipal', usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET')]) {
