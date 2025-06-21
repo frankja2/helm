@@ -7,24 +7,16 @@ pipeline {
 
   stages {
     stage('Validate Helm Chart') {
-      steps {
-        withCredentials([file(credentialsId: env.KUBECONFIG_CRED_ID, variable: 'KUBECONFIG')]) {
-          sh '''
-            export KUBECONFIG=$KUBECONFIG
-            helm -h
-          '''
-        }
-      }
+steps {
+  sh 'which helm || echo "brak helma"'
+  sh 'ls -l /usr/local/bin/'
+  sh 'env'
+}
     }
     stage('Install Helm Chart') {
-      steps {
-        withCredentials([file(credentialsId: env.KUBECONFIG_CRED_ID, variable: 'KUBECONFIG')]) {
-          sh '''
-            export KUBECONFIG=$KUBECONFIG
-            helm upgrade -i test ./my-nginx
-          '''
-        }
-      }
+steps {
+  sh 'sleep 120'
+}
     }
   }
 }
