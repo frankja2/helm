@@ -53,10 +53,10 @@ stage('Push Helm Chart to ACR') {
     }
   }
 }
-stage('Generate secret.yaml') {
+stage('Generate secrets.yaml') {
   steps {
     sh '''
-      cat <<EOF > secret.yaml
+      cat <<EOF > secrets.yaml
 secrets:
   - name: db-password
     value: supersecret123
