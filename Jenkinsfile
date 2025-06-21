@@ -4,7 +4,7 @@ pipeline {
   environment {
     KUBECONFIG_CRED_ID = 'k3s-kubeconfig'
     AZURE_TENANT_ID = 'b8d5cd0a-97e5-4064-a2d0-ceff502aef62'
-    ACR_NAME = 'jfsanbox'
+    ACR_NAME = 'jfsandbox'
   }
 
   stages {
