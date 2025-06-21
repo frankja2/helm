@@ -53,6 +53,17 @@ stage('Push Helm Chart to ACR') {
     }
   }
 }
-
+stage('Template Helm Chart from ACR') {
+  steps {
+    withCredentials([usernamePassword(credentialsId: 'jenkins-serviceprincipal', usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET')]) {
+      sh '''
+        helm registry login $ACR_NAME.azurecr.io --username $AZURE_CLIENT_ID --password $AZURE_CLIENT_SECRET
+        helm pull oci://$ACR_NAME.azurecr.io/helm/external --version 0.1.0
+        tar xzf external-0.1.0.tgz
+        helm template test ./external
+      '''
+    }
   }
+}
+}
 }
