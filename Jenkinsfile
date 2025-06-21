@@ -83,7 +83,9 @@ stage('Push Helm Chart to ACR') {
     withCredentials([usernamePassword(credentialsId: 'jenkins-serviceprincipal', usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET')]) {
       dir(env.CHART_PATH) {
 script {
-def secrets = getSecretsFromKeyVault('dev', 'test')}
+def secrets = getSecretsFromKeyVault('dev', 'test')
+echo "Sekrety z KeyVault:\n${secrets.collect { k, v -> "- ${k} = ${v}" }.join('\n')}"
+}
         sh '''
           CHART_TGZ=$(ls *.tgz | head -n1)
           helm registry login $ACR_NAME.azurecr.io --username $AZURE_CLIENT_ID --password $AZURE_CLIENT_SECRET
