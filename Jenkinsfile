@@ -116,7 +116,8 @@ stage('Template Helm Chart from ACR') {
           script: "yq .chart-version values.yaml",
           returnStdout: true
         ).trim()
-      echo "Wersja chartu z values.yaml: ${chartVersion}"        
+      echo "Wersja chartu z values.yaml: ${chartVersion}"
+      }
       sh '''
         helm registry login $ACR_NAME.azurecr.io --username $AZURE_CLIENT_ID --password $AZURE_CLIENT_SECRET
 
