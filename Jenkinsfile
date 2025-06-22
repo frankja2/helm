@@ -119,9 +119,8 @@ stage('Template Helm Chart from ACR') {
       echo "Wersja chartu z values.yaml: ${chartVersion}"
       
         sh """
-          helm registry login $ACR_NAME.azurecr.io --username $AZURE_CLIENT_ID --password $AZURE_CLIENT_SECRET
-
-          helm upgrade -i myrelease oci://jfsandbox.azurecr.io/helm/${CHART_PATH} --version ${chartVersion} -f secrets.yaml -n default
+          helm registry login \$ACR_NAME.azurecr.io --username \$AZURE_CLIENT_ID --password \$AZURE_CLIENT_SECRET
+          helm upgrade -i myrelease oci://\$ACR_NAME.azurecr.io/helm/\$CHART_PATH --version ${chartVersion} -f secrets.yaml -n default
         """
       }
     }
