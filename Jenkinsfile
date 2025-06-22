@@ -108,7 +108,7 @@ stage('Template Helm Chart from ACR') {
       sh '''
         helm registry login $ACR_NAME.azurecr.io --username $AZURE_CLIENT_ID --password $AZURE_CLIENT_SECRET
 
-        helm upgrade -i myrelease oci://jfsandbox.azurecr.io/helm/external --version 0.1.0 -f secrets.yaml -n default
+        helm template myrelease oci://jfsandbox.azurecr.io/helm/external --version 0.1.0 -f secrets.yaml -n default
       '''
     }
   }
