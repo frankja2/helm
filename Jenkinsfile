@@ -39,13 +39,18 @@ def getSecretsFromKeyVault(stage, vaultSuffix) {
 pipeline {
   agent { label 'terraform' }
 
+  parameters {
+    string(name: 'CHART_PATH', defaultValue: 'external', description: 'Podkatalog z helm chart')
+    string(name: 'CHART_VERSION', defaultValue: '0.1.0', description: 'Wersja chartu do wypchnięcia')
+  }
+
   environment {
     KUBECONFIG_CRED_ID = 'k3s-kubeconfig'
     AZURE_TENANT_ID = 'b8d5cd0a-97e5-4064-a2d0-ceff502aef62'
     ACR_NAME = 'jfsandbox'
     REPO_URL = 'https://github.com/frankja2/helm-charts.git'
-    CHART_PATH = 'external'
-    CHART_VERSION = '0.1.0'    // Dopasuj do Chart.yaml jeśli zmieniasz wersję
+    CHART_PATH = "${params.CHART_PATH}"     // <--- param
+    CHART_VERSION = "${params.CHART_VERSION}" // <--- param
   }
 
   stages {
