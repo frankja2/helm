@@ -110,6 +110,13 @@ stage('Push Helm Chart to ACR') {
 stage('Template Helm Chart from ACR') {
   steps {
     withCredentials([usernamePassword(credentialsId: 'jenkins-serviceprincipal', usernameVariable: 'AZURE_CLIENT_ID', passwordVariable: 'AZURE_CLIENT_SECRET')]) {
+      script {
+        // Zakładam, że plik values.yaml jest w katalogu głównym workspace (albo podaj pełną ścieżkę)
+        def chartVersion = sh(
+          script: "yq .chart-version values.yaml",
+          returnStdout: true
+        ).trim()
+      echo "Wersja chartu z values.yaml: ${chartVersion}"        
       sh '''
         helm registry login $ACR_NAME.azurecr.io --username $AZURE_CLIENT_ID --password $AZURE_CLIENT_SECRET
 
