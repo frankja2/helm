@@ -40,6 +40,7 @@ pipeline {
   agent { label 'terraform' }
 
   parameters {
+    string(name: 'PROJECT_NAME', defaultValue: 'external', description: 'PROJECT_NAME')
     string(name: 'CHART_PATH', defaultValue: 'external', description: 'Podkatalog z helm chart')
     string(name: 'CHART_VERSION', defaultValue: '0.1.0', description: 'Wersja chartu do wypchnięcia')
   }
@@ -120,7 +121,7 @@ stage('Template Helm Chart from ACR') {
       
         sh """
           helm registry login \$ACR_NAME.azurecr.io --username \$AZURE_CLIENT_ID --password \$AZURE_CLIENT_SECRET
-          helm upgrade -i myrelease oci://\$ACR_NAME.azurecr.io/helm/\$CHART_PATH --version ${chartVersion} -f secrets.yaml -n default
+          helm upgrade -i \$PROJECT_NAME oci://\$ACR_NAME.azurecr.io/helm/\$CHART_PATH --version ${chartVersion} -f secrets.yaml -n default
         """
       }
     }
