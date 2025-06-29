@@ -1,6 +1,7 @@
 def getSecretsFromKeyVault(stage, vaultSuffix) {
     def vaultName = "jfsandbox"
 
+    
     def secretNamesRaw = sh(
         script: """
         az keyvault secret list --vault-name ${vaultName} --query '[].name' --output tsv |
