@@ -20,13 +20,24 @@ def getSecretsFromKeyVault(stage, vaultSuffix) {
             returnStdout: true
         ).trim()
 
-        // Szukamy nowego formatu "key: value"
-        def parts = rawValue.split("=", 2)
-        if (parts.length == 2) {
-            def actualKey = parts[0].trim()
-            def actualValue = parts[1].trim()
-            secretValues[actualKey] = actualValue
-        } else {
+        def parsedAny = false
+        def lines = rawValue.split("\\r?\\n")
+
+        for (line in lines) {
+            line = line.trim()
+            if (!line || line.startsWith("#")) {
+                continue
+            }
+            def parts = line.split("=", 2)
+            if (parts.length == 2) {
+                def actualKey = parts[0].trim()
+                def actualValue = parts[1].trim()
+                secretValues[actualKey] = actualValue
+                parsedAny = true
+            }
+        }
+
+        if (!parsedAny) {
             // fallback: stary styl – klucz na podstawie nazwy secreta
             def helmSecretName = secretName.replaceFirst('^aks-', '').replaceAll('-', '_')
             secretValues[helmSecretName] = rawValue
@@ -35,6 +46,7 @@ def getSecretsFromKeyVault(stage, vaultSuffix) {
 
     return secretValues
 }
+
 
 pipeline {
   agent { label 'terraform' }
