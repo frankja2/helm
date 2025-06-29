@@ -21,7 +21,7 @@ def getSecretsFromKeyVault(stage, vaultSuffix) {
         ).trim()
 
         // Szukamy nowego formatu "key: value"
-        def parts = rawValue.split(":", 2)
+        def parts = rawValue.split("=", 2)
         if (parts.length == 2) {
             def actualKey = parts[0].trim()
             def actualValue = parts[1].trim()
